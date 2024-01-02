@@ -31,9 +31,9 @@ namespace ServiceLocator.Player
 
         public void Init(UIService uI, MapService map, SoundService sound)
         {
-            uIService = uI;
-            mapService = map;
-            soundService = sound;
+            this.uIService = uI;
+            this.mapService = map;
+            this.soundService = sound;
             InitializeVariables();
         }
 
