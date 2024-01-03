@@ -6,6 +6,7 @@ using ServiceLocator.Main;
 using UnityEngine.SceneManagement;
 using ServiceLocator.Events;
 using ServiceLocator.Wave;
+using ServiceLocator.Player;
 
 namespace ServiceLocator.UI
 {
@@ -42,25 +43,29 @@ namespace ServiceLocator.UI
 
         private void Start()
         {
-            monkeySelectionController = new MonkeySelectionUIController(cellContainer, monkeyCellPrefab, monkeyCellScriptableObjects);
+            nextWaveButton.onClick.AddListener(OnNextWaveButton);
+            quitButton.onClick.AddListener(OnQuitButtonClicked);
+            playAgainButton.onClick.AddListener(OnPlayAgainButtonClicked);
+        }
+
+        public void Init(EventService eventService, WaveService waveService, PlayerService playerService)
+        {
+            this.eventService = eventService;
+            this.waveService = waveService;
+
+            InitializeUI(playerService);
+            SubscribeToEvents();
+        }
+
+        private void InitializeUI(PlayerService playerService)
+        {
+            monkeySelectionController = new MonkeySelectionUIController(cellContainer, monkeyCellPrefab, monkeyCellScriptableObjects, playerService);
             MonkeySelectionPanel.SetActive(false);
             monkeySelectionController.SetActive(false);
 
             gameplayPanel.SetActive(false);
             levelSelectionPanel.SetActive(true);
             gameEndPanel.SetActive(false);
-
-            nextWaveButton.onClick.AddListener(OnNextWaveButton);
-            quitButton.onClick.AddListener(OnQuitButtonClicked);
-            playAgainButton.onClick.AddListener(OnPlayAgainButtonClicked);
-        }
-
-        public void Init(EventService eventService, WaveService waveService)
-        {
-            this.eventService = eventService;
-            this.waveService = waveService;
-
-            SubscribeToEvents();
         }
 
         private void SubscribeToEvents() => eventService.OnMapSelected.AddListener(OnMapSelected);
